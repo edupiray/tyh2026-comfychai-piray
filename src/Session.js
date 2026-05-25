@@ -118,6 +118,13 @@ class Session{
     assignedReviewersFor(paper){
         return this._assignments.get(paper) || [];
     }
+    addReview(paper, reviewer, text, score){
+        if(this._stage !== "Assignment") throw new Error("Reviews can only be added during Assignment stage");
+        if(!this.assignedReviewersFor(paper).includes(reviewer)) throw new Error("Reviewer is not assigned to this paper");
+        if(paper.reviews().some(function(r){ return r.reviewer() === reviewer; })) throw new Error("Reviewer already submitted a review for this paper");
+        if(!Number.isInteger(score) || score < -3 || score > 3) throw new Error("Score must be an integer between -3 and +3");
+        paper.addReview(reviewer, text, score);
+    }
 }
 
 module.exports = Session;
