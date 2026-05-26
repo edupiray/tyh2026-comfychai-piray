@@ -8,6 +8,8 @@ class Session{
         this._bids=[];
         this._stage="Receiving";
         this._assignments=new Map();
+        this._acceptanceRate=50;
+        this._acceptedPapers=[];
     }
     name(){
         return this._name;
@@ -117,6 +119,36 @@ class Session{
     }
     assignedReviewersFor(paper){
         return this._assignments.get(paper) || [];
+    }
+    setAcceptanceRate(rate){
+        this._acceptanceRate = rate;
+    }
+    closeReviewing(){
+        this.setStage("Selection");
+        this._selectPapers();
+    }
+    _selectPapers(){
+        const sorted = this._papers.slice().sort(function(a, b){ return b.score() - a.score(); });
+        const total = sorted.length;
+        const cutoff = Math.ceil(total * this._acceptanceRate / 100);
+        const accepted = sorted.slice(0, cutoff);
+
+        if(cutoff < total && cutoff > 0){
+            const boundaryScore = sorted[cutoff - 1].score();
+            const tied = sorted.slice(cutoff).filter(function(p){ return p.score() === boundaryScore; });
+            if(tied.length > 0){
+                const extendedCount = accepted.length + tied.length;
+                const hardCap = Math.ceil(total * 0.60);
+                if(extendedCount <= hardCap){
+                    tied.forEach(function(p){ accepted.push(p); });
+                }
+            }
+        }
+
+        this._acceptedPapers = accepted;
+    }
+    acceptedPapers(){
+        return this._acceptedPapers;
     }
     addReview(paper, reviewer, text, score){
         if(this._stage !== "Assignment") throw new Error("Reviews can only be added during Assignment stage");
