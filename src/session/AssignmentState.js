@@ -8,7 +8,7 @@ class AssignmentState extends SessionState {
         if (!this.assignedReviewersFor(session, paper).includes(reviewer)) {
             throw new Error("Reviewer is not assigned to this paper");
         }
-        if (paper.reviews().some(function(r) { return r.reviewer() === reviewer; })) {
+        if (paper.reviews().some(function(review) { return review.reviewer() === reviewer; })) {
             throw new Error("Reviewer already submitted a review for this paper");
         }
         if (!Number.isInteger(score) || score < -3 || score > 3) {

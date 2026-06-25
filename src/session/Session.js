@@ -81,15 +81,15 @@ class Session {
     _assignReviewers() {
         const papers = this._papers;
         const reviewers = this._programCommittee;
-        const A = papers.length;
-        const R = reviewers.length;
-        const total = 3 * A;
-        const base = Math.floor(total / R);
-        const extra = total % R;
+        const paperCount = papers.length;
+        const reviewerCount = reviewers.length;
+        const total = 3 * paperCount;
+        const base = Math.floor(total / reviewerCount);
+        const extra = total % reviewerCount;
 
         const capacities = new Map();
-        reviewers.forEach((reviewer, i) => {
-            capacities.set(reviewer, base + (i < extra ? 1 : 0));
+        reviewers.forEach((reviewer, index) => {
+            capacities.set(reviewer, base + (index < extra ? 1 : 0));
         });
 
         const priorityOrder = [Interests.Interested, Interests.Maybe, null, Interests.NotInterested];
@@ -108,7 +108,7 @@ class Session {
                         if (bid && bid.interest() === Interests.Conflict) return false;
                         return (bid ? bid.interest() : null) === targetInterest;
                     })
-                    .sort((a, b) => capacities.get(b) - capacities.get(a));
+                    .sort((reviewerA, reviewerB) => capacities.get(reviewerB) - capacities.get(reviewerA));
                 for (const reviewer of candidates) {
                     if (assigned.length >= 3) break;
                     assigned.push(reviewer);

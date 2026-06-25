@@ -3,7 +3,7 @@ class AcceptanceByCount {
         this._maxCount = maxCount;
     }
     select(papers) {
-        const sorted = papers.slice().sort(function(a, b) { return b.score() - a.score(); });
+        const sorted = papers.slice().sort(function(paperA, paperB) { return paperB.score() - paperA.score(); });
         return sorted.slice(0, this._maxCount);
     }
 }
