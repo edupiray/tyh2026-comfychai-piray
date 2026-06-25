@@ -5,6 +5,7 @@ class Paper{
         if(!authors.includes(correspondingAuthor)) throw new Error("Corresponding author must be an author");
         this._title = title;
         this._reviews = [];
+        this._assignedReviewers = [];
         this._authors = authors;
         this._correspondingAuthor = correspondingAuthor;
     }
@@ -17,13 +18,26 @@ class Paper{
     reviews(){
         return this._reviews;
     }
+    assignedReviewers(){
+        return this._assignedReviewers;
+    }
+    addAssignedReviewer(reviewer){
+        this._assignedReviewers.push(reviewer);
+    }
     isValid(){
         return (this._title !== "") && (this._authors.length > 0);
     }
-    addReview(reviewer, review, score){
-        if (this.reviewsCount() < this.constructor.allowedReviews)
-            this._reviews.push(new Review(reviewer, review, score));
-        else throw(new Error("Cannot allow any more reviews"))
+    addReview(reviewer, text, score){
+        if(!this._assignedReviewers.includes(reviewer)){
+            throw new Error("Reviewer is not assigned to this paper");
+        }
+        if(this._reviews.some(function(review){ return review.reviewer() === reviewer; })){
+            throw new Error("Reviewer already submitted a review for this paper");
+        }
+        if(this.reviewsCount() >= this.constructor.allowedReviews){
+            throw new Error("Cannot allow any more reviews");
+        }
+        this._reviews.push(new Review(reviewer, text, score));
     }
     reviewsCount(){
         return this.reviews().length;

@@ -11,13 +11,16 @@ beforeEach(()=>{
     julian = new User();
     matias = new User();
     paper = new Paper("A Systematic Literature Review",[juan, matias],juan);
+    paper.addAssignedReviewer(juan);
+    paper.addAssignedReviewer(julian);
+    paper.addAssignedReviewer(matias);
 });
 
 describe("A Paper", ()=>{
     it("should receive up to 3 reviews", ()=>{
         paper.addReview(julian, "Paper is terrible", -3);
         expect(paper.reviews()).toHaveLength(1);
-        paper.addReview(julian, "Paper is bad", -2);
+        paper.addReview(juan, "Paper is bad", -2);
         paper.addReview(matias, "Paper is awesome", 3);
         let invalidReview = ()=>{paper.addReview(matias, "Paper is meh", 0);}
         expect(invalidReview).toThrow();

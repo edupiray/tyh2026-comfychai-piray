@@ -8,7 +8,6 @@ class Session {
         this._papers = [];
         this._bids = [];
         this._state = new ReceivingState();
-        this._assignments = new Map();
         this._acceptancePolicy = null;
         this._acceptedPapers = [];
     }
@@ -78,10 +77,9 @@ class Session {
     _bidExistsFor(paper, reviewer) {
         return typeof(this._bidFor(paper, reviewer)) !== "undefined";
     }
-    _assignReviewers() {
-        const papers = this._papers;
+    _buildInitialCapacities() {
         const reviewers = this._programCommittee;
-        const paperCount = papers.length;
+        const paperCount = this._papers.length;
         const reviewerCount = reviewers.length;
         const total = 3 * paperCount;
         const base = Math.floor(total / reviewerCount);
@@ -91,7 +89,12 @@ class Session {
         reviewers.forEach((reviewer, index) => {
             capacities.set(reviewer, base + (index < extra ? 1 : 0));
         });
-
+        return capacities;
+    }
+    _assignReviewers() {
+        const papers = this._papers;
+        const reviewers = this._programCommittee;
+        const capacities = this._buildInitialCapacities();
         const priorityOrder = [Interests.Interested, Interests.Maybe, null, Interests.NotInterested];
         const self = this;
 
@@ -115,7 +118,7 @@ class Session {
                     capacities.set(reviewer, capacities.get(reviewer) - 1);
                 }
             }
-            this._assignments.set(paper, assigned);
+            assigned.forEach((reviewer) => { paper.addAssignedReviewer(reviewer); });
         }
     }
 }

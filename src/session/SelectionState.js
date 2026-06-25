@@ -8,7 +8,7 @@ class SelectionState extends SessionState {
         return session._acceptedPapers;
     }
     assignedReviewersFor(session, paper) {
-        return session._assignments.get(paper) || [];
+        return paper.assignedReviewers();
     }
 }
 

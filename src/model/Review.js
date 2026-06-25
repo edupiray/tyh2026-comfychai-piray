@@ -1,5 +1,8 @@
 class Review{
     constructor(reviewer, text, score){
+        if(!Number.isInteger(score) || score < -3 || score > 3){
+            throw new Error("Score must be an integer between -3 and +3");
+        }
         this._reviewer = reviewer;
         this._text = text;
         this._score = score;
