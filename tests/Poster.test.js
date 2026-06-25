@@ -1,5 +1,5 @@
-const Poster = require("../src/Poster");
-const User = require('../src/User');
+const Poster = require("../src/model/Poster");
+const User = require("../src/model/User");
 
 let juan, julian, matias;
 let poster01;

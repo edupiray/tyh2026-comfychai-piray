@@ -1,10 +1,10 @@
-const Paper = require("../src/Paper");
-const Review = require("../src/Review");
-const User = require("../src/User");
+const Paper = require("../src/model/Paper");
+const Review = require("../src/model/Review");
+const User = require("../src/model/User");
 
 let paper;
 let juan, julian, matias;
-jest.mock("../src/User");
+jest.mock("../src/model/User");
 
 beforeEach(()=>{
     juan = new User();

@@ -1,6 +1,6 @@
-const { Bid, Interests } = require("../src/Bid");
-const Paper = require("../src/Paper");
-const User = require("../src/User");
+const { Bid, Interests } = require("../src/model/Bid");
+const Paper = require("../src/model/Paper");
+const User = require("../src/model/User");
 
 let juan, julian;
 let paper01;

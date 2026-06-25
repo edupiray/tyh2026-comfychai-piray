@@ -1,5 +1,5 @@
-const RegularPaper = require("../src/RegularPaper");
-const User = require('../src/User');
+const RegularPaper = require("../src/model/RegularPaper");
+const User = require("../src/model/User");
 
 beforeEach( ()=> {
     juan = new User("Juan Gardey", "LIFIA, UNLP", "jgardey@lifia.ar", "123");

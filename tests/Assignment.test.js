@@ -1,7 +1,7 @@
-const Session = require("../src/Session");
-const User = require("../src/User");
-const Paper = require("../src/Paper");
-const { Bid, Interests } = require("../src/Bid");
+const Session = require("../src/session/Session");
+const User = require("../src/model/User");
+const Paper = require("../src/model/Paper");
+const { Bid, Interests } = require("../src/model/Bid");
 
 let session;
 let r1, r2, r3, r4, r5;

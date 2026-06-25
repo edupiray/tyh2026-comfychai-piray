@@ -1,7 +1,7 @@
-const Session = require("../src/Session");
-const User = require("../src/User");
-const Paper = require("../src/Paper");
-const { Interests } = require("../src/Bid");
+const Session = require("../src/session/Session");
+const User = require("../src/model/User");
+const Paper = require("../src/model/Paper");
+const { Interests } = require("../src/model/Bid");
 
 let session;
 let r1, r2, r3, r4;
@@ -72,7 +72,7 @@ describe("addReview — stage validation", function() {
         freshSession.submit(paper);
         expect(function() {
             freshSession.addReview(paper, r4, "Too early", 1);
-        }).toThrow("Reviews can only be added during Assignment stage");
+        }).toThrow("Cannot add reviews in Receiving stage");
     });
 
     it("throws if stage is Bidding", function() {
@@ -84,7 +84,7 @@ describe("addReview — stage validation", function() {
         freshSession.closeSubmissions();
         expect(function() {
             freshSession.addReview(paper, r4, "Too early", 1);
-        }).toThrow("Reviews can only be added during Assignment stage");
+        }).toThrow("Cannot add reviews in Bidding stage");
     });
 });
 
