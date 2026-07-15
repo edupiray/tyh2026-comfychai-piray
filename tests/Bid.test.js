@@ -1,3 +1,4 @@
+// Entidad Bid: paper, revisor y nivel de interés (enum Interests)
 const { Bid, Interests } = require("../src/model/Bid");
 const Paper = require("../src/model/Paper");
 const User = require("../src/model/User");

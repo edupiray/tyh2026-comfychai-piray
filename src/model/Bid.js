@@ -1,4 +1,4 @@
-const Interests = {
+const Interests = { //clase que representa los intereses de un revisor sobre un paper, con sus posibles valores
 	Interested: Symbol("Interested"),
 	Maybe: Symbol("Maybe"),
 	NotInterested: Symbol("NotInterested"),

@@ -1,3 +1,4 @@
+// Flujo básico de Session y validación de operaciones inválidas por etapa (patrón State)
 const Session = require("../src/session/Session");
 const User = require("../src/model/User");
 const Paper = require("../src/model/Paper");

@@ -1,5 +1,8 @@
-class AcceptanceByCount {
+const AcceptancePolicy = require("./AcceptancePolicy");
+
+class AcceptanceByCount extends AcceptancePolicy { //clase que implementa la politica de aceptacion por cantidad de papers
     constructor(maxCount) {
+        super();
         this._maxCount = maxCount;
     }
     select(papers) {

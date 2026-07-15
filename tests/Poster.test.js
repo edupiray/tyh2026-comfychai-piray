@@ -1,3 +1,4 @@
+// Entidad Poster: URLs de adjunto/fuentes y validez heredada de Paper
 const Poster = require("../src/model/Poster");
 const User = require("../src/model/User");
 

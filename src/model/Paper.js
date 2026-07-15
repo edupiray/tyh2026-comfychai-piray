@@ -1,6 +1,6 @@
 const Review = require("./Review");
 
-class Paper{
+class Paper{ //clase que representa un paper, con su título, autores, autor correspondiente, reviews y revisores asignados
     constructor(title, authors, correspondingAuthor){
         if(!authors.includes(correspondingAuthor)) throw new Error("Corresponding author must be an author");
         this._title = title;

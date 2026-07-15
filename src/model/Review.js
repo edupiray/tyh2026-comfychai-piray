@@ -1,4 +1,4 @@
-class Review{
+class Review{ //clase que representa una review, con su revisor, texto y puntaje
     constructor(reviewer, text, score){
         if(!Number.isInteger(score) || score < -3 || score > 3){
             throw new Error("Score must be an integer between -3 and +3");

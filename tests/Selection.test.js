@@ -1,3 +1,4 @@
+// Políticas de aceptación (patrón Strategy): AcceptanceByCount y AcceptanceByScoreThreshold
 const Session = require("../src/session/Session");
 const User = require("../src/model/User");
 const Paper = require("../src/model/Paper");

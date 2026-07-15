@@ -1,4 +1,4 @@
-class Conference{
+class Conference{ //clase que representa una conferencia, con su nombre, los chairs y las sesiones asociadas
     constructor(name){
         this._name = name;
         this._chairs = [];

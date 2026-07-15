@@ -1,13 +1,13 @@
 const {Interests} = require("../model/Bid");
 const ReceivingState = require("./ReceivingState");
 
-class Session {
+class Session { //clase que representa una sesión de revisión de papers, con su estado actual y la lógica para avanzar entre estados
     constructor() {
         this._name = "";
         this._programCommittee = [];
         this._papers = [];
         this._bids = [];
-        this._state = new ReceivingState();
+        this._state = new ReceivingState(); //estados: arranca la sesión en Recepción
         this._acceptancePolicy = null;
         this._acceptedPapers = [];
     }
@@ -22,6 +22,9 @@ class Session {
     }
     stage() {
         return this._state.stageName();
+    }
+    setState(state) { //los propios estados establecen aquí la transición al estado siguiente
+        this._state = state;
     }
     papers() {
         return this._papers;
@@ -39,7 +42,7 @@ class Session {
         this._state.submit(this, paper);
     }
     closeSubmissions() {
-        this._state = this._state.closeSubmissions(this);
+        this._state.closeSubmissions(this);
     }
     enterBid(paper, reviewer, interest) {
         this._state.enterBid(this, paper, reviewer, interest);
@@ -54,7 +57,7 @@ class Session {
         return this._bidFor(paper, reviewer).interest();
     }
     closeBidding() {
-        this._state = this._state.closeBidding(this);
+        this._state.closeBidding(this);
     }
     assignedReviewersFor(paper) {
         return this._state.assignedReviewersFor(this, paper);
@@ -62,11 +65,11 @@ class Session {
     addReview(paper, reviewer, text, score) {
         this._state.addReview(this, paper, reviewer, text, score);
     }
-    setAcceptancePolicy(policy) {
+    setAcceptancePolicy(policy) { //se define la política de aceptación de papers viene de un test
         this._acceptancePolicy = policy;
     }
     closeReviewing() {
-        this._state = this._state.closeReviewing(this);
+        this._state.closeReviewing(this);
     }
     acceptedPapers() {
         return this._state.acceptedPapers(this);
@@ -77,7 +80,7 @@ class Session {
     _bidExistsFor(paper, reviewer) {
         return typeof(this._bidFor(paper, reviewer)) !== "undefined";
     }
-    _buildInitialCapacities() {
+    _buildInitialCapacities() { //método para construir un mapa de capacidades iniciales para cada revisor, basado en el número total de papers y revisores
         const reviewers = this._programCommittee;
         const paperCount = this._papers.length;
         const reviewerCount = reviewers.length;
@@ -91,32 +94,37 @@ class Session {
         });
         return capacities;
     }
-    _assignReviewers() {
-        const papers = this._papers;
-        const reviewers = this._programCommittee;
+    _eligibleReviewersFor(paper, assigned, capacities) { //filtra candidatos elegibles: no asignado aún, con cupo, no autor, sin conflicto de interés
+        return this._programCommittee.filter((reviewer) => {
+            if (assigned.includes(reviewer)) return false;
+            if (capacities.get(reviewer) <= 0) return false;
+            if (paper.authors().includes(reviewer)) return false;
+            const bid = this._bidFor(paper, reviewer);
+            return !(bid && bid.interest() === Interests.Conflict);
+        });
+    }
+    _assignFromPriorityLevel(paper, targetInterest, assigned, capacities) { //asigna revisores elegibles cuyo bid coincide con el nivel de prioridad, priorizando mayor capacidad
+        const candidates = this._eligibleReviewersFor(paper, assigned, capacities)
+            .filter((reviewer) => {
+                const bid = this._bidFor(paper, reviewer);
+                return (bid ? bid.interest() : null) === targetInterest;
+            })
+            .sort((reviewerA, reviewerB) => capacities.get(reviewerB) - capacities.get(reviewerA));
+        for (const reviewer of candidates) {
+            if (assigned.length >= 3) break;
+            assigned.push(reviewer);
+            capacities.set(reviewer, capacities.get(reviewer) - 1);
+        }
+    }
+    _assignReviewers() { //orquesta la asignación: por cada paper, recorre los niveles de prioridad hasta completar 3 revisores
         const capacities = this._buildInitialCapacities();
         const priorityOrder = [Interests.Interested, Interests.Maybe, null, Interests.NotInterested];
-        const self = this;
 
-        for (const paper of papers) {
+        for (const paper of this._papers) {
             const assigned = [];
             for (const targetInterest of priorityOrder) {
                 if (assigned.length >= 3) break;
-                const candidates = reviewers
-                    .filter((reviewer) => {
-                        if (assigned.includes(reviewer)) return false;
-                        if (capacities.get(reviewer) <= 0) return false;
-                        if (paper.authors().includes(reviewer)) return false;
-                        const bid = self._bidFor(paper, reviewer);
-                        if (bid && bid.interest() === Interests.Conflict) return false;
-                        return (bid ? bid.interest() : null) === targetInterest;
-                    })
-                    .sort((reviewerA, reviewerB) => capacities.get(reviewerB) - capacities.get(reviewerA));
-                for (const reviewer of candidates) {
-                    if (assigned.length >= 3) break;
-                    assigned.push(reviewer);
-                    capacities.set(reviewer, capacities.get(reviewer) - 1);
-                }
+                this._assignFromPriorityLevel(paper, targetInterest, assigned, capacities);
             }
             assigned.forEach((reviewer) => { paper.addAssignedReviewer(reviewer); });
         }

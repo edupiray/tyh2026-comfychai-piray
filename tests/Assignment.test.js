@@ -1,3 +1,4 @@
+// Algoritmo de asignación de revisores: cupo, prioridad de bids y exclusión por conflicto de interés
 const Session = require("../src/session/Session");
 const User = require("../src/model/User");
 const Paper = require("../src/model/Paper");

@@ -1,3 +1,4 @@
+// Entidad RegularPaper: abstract y regla de validez de 300 palabras
 const RegularPaper = require("../src/model/RegularPaper");
 const User = require("../src/model/User");
 

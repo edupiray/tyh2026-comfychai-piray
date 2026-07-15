@@ -1,3 +1,4 @@
+// Entidad Paper: máximo de reviews y cálculo de score promedio
 const Paper = require("../src/model/Paper");
 const Review = require("../src/model/Review");
 const User = require("../src/model/User");

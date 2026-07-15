@@ -1,3 +1,4 @@
+// Carga de reviews: asignación, duplicados, rango de score y máximo por paper
 const Session = require("../src/session/Session");
 const User = require("../src/model/User");
 const Paper = require("../src/model/Paper");

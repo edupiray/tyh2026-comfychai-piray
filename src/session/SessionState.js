@@ -1,4 +1,4 @@
-class SessionState {
+class SessionState { //clase abstracta que representa el estado de la sesion
     stageName() {
         throw new Error("Subclass must implement stageName()");
     }

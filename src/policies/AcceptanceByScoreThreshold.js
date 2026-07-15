@@ -1,5 +1,8 @@
-class AcceptanceByScoreThreshold {
+const AcceptancePolicy = require("./AcceptancePolicy");
+
+class AcceptanceByScoreThreshold extends AcceptancePolicy { //clase que implementa la politica de aceptacion por puntaje minimo
     constructor(minScore) {
+        super();
         this._minScore = minScore;
     }
     select(papers) {

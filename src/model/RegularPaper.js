@@ -1,6 +1,6 @@
 const Paper = require("./Paper");
 
-class RegularPaper extends Paper{
+class RegularPaper extends Paper{ //clase que representa un paper regular, con su título, autores, autor correspondiente, reviews y revisores asignados, además de un abstract
     constructor(title, authors, correspondingAuthor, abstract){
         super(title, authors, correspondingAuthor);
         this._abstract = abstract;
